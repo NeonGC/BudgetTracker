@@ -218,7 +218,13 @@ namespace BudgetTracker.Scrapers
             chrome.SendKeys(configuration.Password);
             chrome.SendKeys(Keys.Return);
             
+            var smsModel = WaitForSms(() => {}, s => s.Message.ToLower().Contains("пароль для входа"));
+
             WaitForPageLoad(chrome.Driver);
+            
+            var code = new string(smsModel.Message.Where(char.IsDigit).ToArray());
+            chrome.SendKeys(code);
+            chrome.SendKeys(Keys.Return);
         }
     }
 }
