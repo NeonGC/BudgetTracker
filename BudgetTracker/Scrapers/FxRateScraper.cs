@@ -5,6 +5,7 @@ using BudgetTracker.Model;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace BudgetTracker.Scrapers
 {
@@ -24,22 +25,28 @@ namespace BudgetTracker.Scrapers
             var result = new List<MoneyStateModel>();
 
             driver.Navigate().GoToUrl("https://ru.investing.com/indices/us-spx-500");
-            var sps = GetElement(driver, By.Id("last_last")).Text;
-            result.Add(Money("SP500",
-                double.Parse(sps, new NumberFormatInfo() {NumberDecimalSeparator = ",", NumberGroupSeparator = "."}),
-                CurrencyExtensions.USD));
+            var moneyStateModel = ParseMoney("SP500", driver);
+            result.Add(moneyStateModel);
 
             foreach (var item in CurrencyExtensions.KnownCurrencies.Where(v => v != CurrencyExtensions.RUB))
             {
                 driver.Navigate().GoToUrl($"https://ru.investing.com/currencies/{item.ToLower()}-rub");
-                sps = GetElement(driver, By.Id("last_last")).Text;
                 var itemRub = item + "/" + CurrencyExtensions.RUB;
-                result.Add(Money(itemRub,
-                    double.Parse(sps, new NumberFormatInfo {NumberDecimalSeparator = ",", NumberGroupSeparator = "."}),
-                    itemRub));
+                var msm = ParseMoney(itemRub, driver);
+                result.Add(msm);
             }
 
             return result;
+        }
+
+        private MoneyStateModel ParseMoney(string account, ChromeDriver driver)
+        {
+            var webElements = GetElements(driver, By.Id("instrument-header-details"));
+            var priceElement = webElements.First(v => v.GetAttribute("class").Contains("_last"));
+            var sps = priceElement.Text;
+            var moneyStateModel = Money(account, double.Parse(sps, new NumberFormatInfo() {NumberDecimalSeparator = ",", NumberGroupSeparator = "."}),
+                CurrencyExtensions.USD);
+            return moneyStateModel;
         }
     }
 }
