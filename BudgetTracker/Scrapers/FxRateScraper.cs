@@ -30,7 +30,9 @@ namespace BudgetTracker.Scrapers
 
             foreach (var item in CurrencyExtensions.KnownCurrencies.Where(v => v != CurrencyExtensions.RUB))
             {
-                driver.Navigate().GoToUrl($"https://eodhistoricaldata.com/financial-summary/${item.ToUpper()}RUB.FOREX");
+                var url = $"https://eodhistoricaldata.com/financial-summary/${item.ToUpper()}RUB.FOREX";
+                driver.Navigate().GoToUrl(url);
+                Logger.LogInformation($"Scraping {url}");
                 var itemRub = item + "/" + CurrencyExtensions.RUB;
                 var msm = ParseMoney(itemRub, driver);
                 result.Add(msm);
@@ -64,10 +66,9 @@ namespace BudgetTracker.Scrapers
                     }
                 }
 
-                Logger.LogInformation($"Found {resultCell} for {account}");
-
                 if (resultCell != null)
                 {
+                    Logger.LogInformation($"Found {resultCell} for {account}");
                     var moneyStateModel = Money(account, double.Parse(resultCell, new NumberFormatInfo() {NumberDecimalSeparator = "."}),
                         CurrencyExtensions.USD);
                     return moneyStateModel;
