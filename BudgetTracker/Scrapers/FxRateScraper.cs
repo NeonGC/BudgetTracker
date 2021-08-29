@@ -24,13 +24,13 @@ namespace BudgetTracker.Scrapers
 
             var result = new List<MoneyStateModel>();
 
-            driver.Navigate().GoToUrl("https://ru.investing.com/indices/us-spx-500");
+            driver.Navigate().GoToUrl("https://eodhistoricaldata.com/financial-summary/GSPC.INDX");
             var moneyStateModel = ParseMoney("SP500", driver);
             result.Add(moneyStateModel);
 
             foreach (var item in CurrencyExtensions.KnownCurrencies.Where(v => v != CurrencyExtensions.RUB))
             {
-                driver.Navigate().GoToUrl($"https://ru.investing.com/currencies/{item.ToLower()}-rub");
+                driver.Navigate().GoToUrl($"https://eodhistoricaldata.com/financial-summary/${item.ToUpper()}RUB.FOREX");
                 var itemRub = item + "/" + CurrencyExtensions.RUB;
                 var msm = ParseMoney(itemRub, driver);
                 result.Add(msm);
@@ -41,12 +41,30 @@ namespace BudgetTracker.Scrapers
 
         private MoneyStateModel ParseMoney(string account, ChromeDriver driver)
         {
-            var webElements = GetElements(driver, By.TagName("span"));
-            var priceElement = webElements.First(v => v.GetAttribute("class").Contains("instrument-price_last"));
-            var sps = priceElement.Text;
-            var moneyStateModel = Money(account, double.Parse(sps, new NumberFormatInfo() {NumberDecimalSeparator = ",", NumberGroupSeparator = "."}),
-                CurrencyExtensions.USD);
-            return moneyStateModel;
+            var rows = GetElements(driver, By.ClassName("grid4"));
+            foreach (var r in rows)
+            {
+                var cells = r.FindElements(By.TagName("div"));
+                string resultCell = null;
+                if (cells[0].Text.Equals("Close"))
+                {
+                    resultCell = cells[1].Text;
+                }
+
+                if (cells[2].Text.Equals("Close"))
+                {
+                    resultCell = cells[2].Text;
+                }
+
+                if (resultCell != null)
+                {
+                    var moneyStateModel = Money(account, double.Parse(resultCell, new NumberFormatInfo() {NumberDecimalSeparator = "."}),
+                        CurrencyExtensions.USD);
+                    return moneyStateModel;
+                }
+            }
+
+            throw new NotFoundException();
         }
     }
 }
