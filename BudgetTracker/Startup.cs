@@ -139,10 +139,9 @@ namespace BudgetTracker
                 throw new Exception("Connection string for 'LiteDb' should been specified.");
             }
 
-            var connectionString = new ConnectionString(liteDb);
+            var connectionString = new ConnectionString(liteDb) {Upgrade = true};
             DbFileName = connectionString.Filename;
             var liteDbDatabase = new LiteDatabase(connectionString);
-            liteDbDatabase.Engine.Shrink();
             IStorage storage = new LiteDbStorage(liteDbDatabase);
 
             var objectRepository = new ObjectRepository(storage, NullLoggerFactory.Instance);
@@ -207,6 +206,7 @@ namespace BudgetTracker
             app.UseHangfireDashboard(options: new DashboardOptions
             {
                 Authorization = new[]{new HttpContextAuth()},
+                IgnoreAntiforgeryToken = true,
                 AppPath = null
             });
             app.UseHangfireServer();
