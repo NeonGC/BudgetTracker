@@ -56,6 +56,8 @@ namespace BudgetTracker.Scrapers
                     resultCell = cells[2].Text;
                 }
 
+                Logger.LogInformation($"Found ${resultCell} for ${account}");
+                
                 if (resultCell != null)
                 {
                     var moneyStateModel = Money(account, double.Parse(resultCell, new NumberFormatInfo() {NumberDecimalSeparator = "."}),
