@@ -41,9 +41,8 @@ namespace BudgetTracker.Scrapers
 
         private MoneyStateModel ParseMoney(string account, ChromeDriver driver)
         {
-            var webElement = GetElement(driver, By.Id("instrument-header-details"));
-            var webElements = webElement.FindElements(By.TagName("span"));
-            var priceElement = webElements.First(v => v.GetAttribute("class").Contains("_last"));
+            var webElements = GetElements(driver, By.TagName("span"));
+            var priceElement = webElements.First(v => v.GetAttribute("class").Contains("instrument-price_last"));
             var sps = priceElement.Text;
             var moneyStateModel = Money(account, double.Parse(sps, new NumberFormatInfo() {NumberDecimalSeparator = ",", NumberGroupSeparator = "."}),
                 CurrencyExtensions.USD);
