@@ -49,15 +49,23 @@ namespace BudgetTracker.Scrapers
                 if (cells[0].Text.Equals("Close"))
                 {
                     resultCell = cells[1].Text;
+                    if (string.IsNullOrWhiteSpace(resultCell))
+                    {
+                        resultCell = cells[1].GetAttribute("textContent");
+                    }
                 }
 
                 if (cells[2].Text.Equals("Close"))
                 {
-                    resultCell = cells[2].Text;
+                    resultCell = cells[3].Text;
+                    if (string.IsNullOrWhiteSpace(resultCell))
+                    {
+                        resultCell = cells[3].GetAttribute("textContent");
+                    }
                 }
 
-                Logger.LogInformation($"Found ${resultCell} for ${account}");
-                
+                Logger.LogInformation($"Found {resultCell} for {account}");
+
                 if (resultCell != null)
                 {
                     var moneyStateModel = Money(account, double.Parse(resultCell, new NumberFormatInfo() {NumberDecimalSeparator = "."}),
