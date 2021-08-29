@@ -30,7 +30,7 @@ namespace BudgetTracker.Scrapers
 
             foreach (var item in CurrencyExtensions.KnownCurrencies.Where(v => v != CurrencyExtensions.RUB))
             {
-                var url = $"https://eodhistoricaldata.com/financial-summary/${item.ToUpper()}RUB.FOREX";
+                var url = $"https://eodhistoricaldata.com/financial-summary/{item.ToUpper()}RUB.FOREX";
                 driver.Navigate().GoToUrl(url);
                 Logger.LogInformation($"Scraping {url}");
                 var itemRub = item + "/" + CurrencyExtensions.RUB;
