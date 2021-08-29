@@ -15,7 +15,7 @@ namespace BudgetTracker.Services
         public UpdateService()
         {
             _gitHubClient = new GitHubClient(new ProductHeaderValue("DiverOfDark_BudgetTracker", Startup.CommmitHash));
-            _timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromHours(1));
+            _timer = new Timer(TimerCallback, null, TimeSpan.FromSeconds(1), TimeSpan.FromHours(1));
             
             Anchors.Add(_timer.Dispose);
         }
