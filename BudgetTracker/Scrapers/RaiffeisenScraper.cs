@@ -165,7 +165,7 @@ namespace BudgetTracker.Scrapers
 
             WaitForPageLoad(chrome.Driver);
             
-            var code = new string(smsModel.Message.Where(char.IsDigit).ToArray());
+            var code = new string(smsModel.Message.Where(char.IsDigit).Take(4).ToArray());
             chrome.SendKeys(code);
             chrome.SendKeys(Keys.Return);
         }
