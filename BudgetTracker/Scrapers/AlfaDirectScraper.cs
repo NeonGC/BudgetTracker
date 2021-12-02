@@ -37,10 +37,7 @@ namespace BudgetTracker.Scrapers
             WaitForPageLoad(driver);
             
             
-            var smsModel = WaitForSms(() => {}, s => s.Message.ToLower().Contains("Альфа-Инвестиции"));
-
-            WaitForPageLoad(chrome.Driver);
-            
+            var smsModel = WaitForSms(() => {}, s => s.Message.ToLower().Contains("альфа-инвестиции"));
             var code = new string(smsModel.Message.Where(char.IsDigit).ToArray());
             chrome.SendKeys(code);
             
