@@ -35,6 +35,15 @@ namespace BudgetTracker.Scrapers
             
             chrome.SendKeys(Keys.Return);
             WaitForPageLoad(driver);
+            
+            
+            var smsModel = WaitForSms(() => {}, s => s.Message.ToLower().Contains("Альфа-Инвестиции"));
+
+            WaitForPageLoad(chrome.Driver);
+            
+            var code = new string(smsModel.Message.Where(char.IsDigit).ToArray());
+            chrome.SendKeys(code);
+            
             driver.Navigate().GoToUrl("https://lk.alfadirect.ru/reports/MyPortfolio");
             WaitForPageLoad(driver);
 
