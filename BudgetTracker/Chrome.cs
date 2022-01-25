@@ -47,7 +47,7 @@ namespace BudgetTracker
 
         public void SendKeys(string strToSend) => new Actions(Driver).SendKeys(strToSend).Build().Perform();
 
-        public void MoveToElement(RemoteWebElement element, int x, int y) => new Actions(Driver).MoveToElement(element, x, y).Build().Perform();
+        public void MoveToElement(IWebElement element, int x, int y) => new Actions(Driver).MoveToElement(element, x, y).Build().Perform();
 
         public IList<FileInfo> GetDownloads() => Directory.GetFiles(_downloadDir).Select(v => new FileInfo(v)).ToList();
 
