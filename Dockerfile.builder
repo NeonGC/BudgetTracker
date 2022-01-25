@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 as net-builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0 as net-builder
 
 RUN apt -y update && \
     apt -y install apt-utils lsb-release gnupg && \

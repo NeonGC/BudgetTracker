@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using BudgetTracker.Model;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 
@@ -79,21 +81,21 @@ namespace BudgetTracker.Scrapers
             
             Login(configuration, chromeDriver);
 
-            var existingLinks = driver.FindElementsByPartialLinkText("История операций").ToList();
+            var existingLinks = driver.FindElements(By.PartialLinkText("История операций")).ToList();
 
-            var link1 = (RemoteWebElement) driver.FindElementByLinkText("Счета");
+            var link1 = driver.FindElement(By.LinkText("Счета"));
             chromeDriver.MoveToElement(link1, 1, 1);
             
             WaitForPageLoad(driver); 
             
-            existingLinks = driver.FindElementsByPartialLinkText("История операций").Except(existingLinks).ToList();
+            existingLinks = driver.FindElements(By.PartialLinkText("История операций")).Except(existingLinks).ToList();
             existingLinks.Single().Click();
 
             WaitForPageLoad(driver, 2); 
             
-            var selectBtn = driver.FindElementById("pt1:soc1::button");
+            var selectBtn = driver.FindElement(By.Id("pt1:soc1::button"));
 
-            var accountsChooser = driver.FindElementById("pt1:soc1::pop");
+            var accountsChooser = driver.FindElement(By.Id("pt1:soc1::pop"));
 
             var accs = accountsChooser.FindElements(By.TagName("tr"));
 
@@ -114,7 +116,7 @@ namespace BudgetTracker.Scrapers
                 WaitForPageLoad(driver, 2); 
 
 
-                var inputDate = driver.FindElementById("pt1:id1::fd");
+                var inputDate = driver.FindElement(By.Id("pt1:id1::fd"));
                 inputDate.Click();
 
                 WaitForPageLoad(driver, 2); 
@@ -129,12 +131,12 @@ namespace BudgetTracker.Scrapers
                 WaitForPageLoad(driver);
                 chromeDriver.SendKeys(startFrom.ToString("ddMMyyyy"));
 
-                var submit = driver.FindElementById("pt1:showButton::button");
+                var submit = driver.FindElement(By.Id("pt1:showButton::button"));
                 submit.Click();
 
                 WaitForPageLoad(driver, 2); 
 
-                var csv = driver.FindElementById("pt1:downloadCSVLink");
+                var csv = driver.FindElement(By.Id("pt1:downloadCSVLink"));
                 csv.Click();
 
                 int waited = 0;
