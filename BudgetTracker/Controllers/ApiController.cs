@@ -95,6 +95,54 @@ namespace BudgetTracker.Controllers
             return Content(success, "application/json");
         }
 
+        [Route("push-tasker")]
+        public async Task<IActionResult> PushNotificationTasker()
+        {
+            try
+            {
+                string data;
+                using (var ms = new MemoryStream())
+                {
+                    await HttpContext.Request.Body.CopyToAsync(ms);
+                    ms.Position = 0;
+                    data = await new HttpRequestStreamReader(ms, Encoding.UTF8).ReadToEndAsync();
+                }
+                data = HttpUtility.UrlDecode(data);
+                if (data == null)
+                {
+                    throw new NullReferenceException("request is null on push-tasker");
+                }
+                _logger.LogInformation(data);
+                var d = data.Replace("\n", " ").Replace("\r", " ").Split("/=/=", 6).Select(v=>v.Trim()).ToList();
+                var from = d[0]; // %anapp
+                var message = d[1]; // %antext
+                var whenDate = DateTime.UtcNow;
+                var smsModel = new SmsModel(@from, message, whenDate);
+
+                lock (typeof(SmsModel))
+                {
+                    var existingMessage = _objectRepository.Set<SmsModel>()
+                        .FirstOrDefault(s => Math.Abs((s.When - smsModel.When).TotalMinutes) < 2 && s.Message.StartsWith(smsModel.Message));
+                    if (existingMessage == null)
+                    {
+                        _objectRepository.Add(smsModel);
+                    }
+                    else
+                    {
+                        existingMessage.From = smsModel.From;
+                    }
+                }
+
+                _logger.LogInformation($"parsed form: {from} {message} {whenDate}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to parse toast notification");
+            }
+
+            return new EmptyResult();
+        }
+
         [Route("sms-tasker")]
         public async Task<IActionResult> SmsTasker()
         {
