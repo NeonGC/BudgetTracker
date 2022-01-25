@@ -33,11 +33,11 @@ namespace BudgetTracker.Scrapers
             pass.Click();
             chrome.SendKeys(configuration.Password);
             
-            chrome.SendKeys(Keys.Return);
-            WaitForPageLoad(driver);
-            
-            
-            var smsModel = WaitForSms(() => {}, s => s.Message.ToLower().Contains("альфа-инвестиции"));
+            var smsModel = WaitForSms(() =>
+            {
+                chrome.SendKeys(Keys.Return);
+                WaitForPageLoad(driver);
+            }, s => s.Message.ToLower().Contains("альфа-инвестиции"));
             var code = new string(smsModel.Message.Where(char.IsDigit).ToArray());
             chrome.SendKeys(code);
             

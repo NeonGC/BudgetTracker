@@ -134,10 +134,13 @@ namespace BudgetTracker.Scrapers
              var name = GetElement(driver, By.Name("login"));
              name.Click();
              chrome.SendKeys(configuration.Login);
-             chrome.SendKeys(Keys.Enter);
-             var smsCode = GetElement(driver, By.Name("code"));
              
-             var smsModel = WaitForSms(() => {}, s => s.Message.Contains("код") && s.Message.Contains("Tinkoff.ru"));
+             var smsModel = WaitForSms(() =>
+             {
+                 chrome.SendKeys(Keys.Enter);
+                 WaitForPageLoad(driver);
+             }, s => s.Message.Contains("код") && s.Message.Contains("Tinkoff.ru"));
+             var smsCode = GetElement(driver, By.Name("code"));
              smsCode.Click();
              var code = new string(smsModel.Message.Where(char.IsDigit).Take(4).ToArray());
 

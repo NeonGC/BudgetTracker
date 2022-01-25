@@ -158,10 +158,12 @@ namespace BudgetTracker.Scrapers
             chrome.SendKeys(configuration.Login);
             pass.Click();
             chrome.SendKeys(configuration.Password);
-            chrome.SendKeys(Keys.Return);
-            WaitForPageLoad(driver);
             
-            var smsModel = WaitForSms(() => {}, s => s.Message.ToLower().Contains("r-online"));
+            var smsModel = WaitForSms(() =>
+            {
+                chrome.SendKeys(Keys.Return);
+                WaitForPageLoad(driver);
+            }, s => s.Message.ToLower().Contains("r-online"));
 
             WaitForPageLoad(chrome.Driver);
             
