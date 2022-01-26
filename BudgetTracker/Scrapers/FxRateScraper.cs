@@ -25,6 +25,7 @@ namespace BudgetTracker.Scrapers
             var result = new List<MoneyStateModel>();
 
             driver.Navigate().GoToUrl("https://eodhistoricaldata.com/financial-summary/GSPC.INDX");
+            WaitForPageLoad(driver);
             var moneyStateModel = ParseMoney("SP500", driver);
             result.Add(moneyStateModel);
 

@@ -151,6 +151,7 @@ namespace BudgetTracker.Scrapers
         {
             var driver = chrome.Driver;
             driver.Navigate().GoToUrl(@"https://online.raiffeisen.ru/");
+            WaitForPageLoad(driver);
 
             var name = GetElement(driver, By.ClassName("login-form__username-wrap")).FindElement(By.TagName("input"));
             var pass = GetElement(driver, By.ClassName("login-form__password-wrap")).FindElement(By.TagName("input"));

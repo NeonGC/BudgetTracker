@@ -23,6 +23,7 @@ namespace BudgetTracker.Scrapers
             var driver = chrome.Driver;
             
             driver.Navigate().GoToUrl(@"https://my.alfacapital.ru/#/");
+            WaitForPageLoad(driver);
 
             var inputs = GetElements(driver, By.TagName("input"));
             var login = inputs.First(v => v.GetAttribute("name") == "alfa-login");

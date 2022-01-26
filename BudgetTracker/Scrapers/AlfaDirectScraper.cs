@@ -23,6 +23,7 @@ namespace BudgetTracker.Scrapers
             var driver = chrome.Driver;
             
             driver.Navigate().GoToUrl("https://lk.alfadirect.ru/");
+            WaitForPageLoad(driver);
 
             var fields = GetElements(driver, By.TagName("input")).ToList();
             var name = fields[0];

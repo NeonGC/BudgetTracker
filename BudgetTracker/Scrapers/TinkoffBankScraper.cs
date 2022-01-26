@@ -131,6 +131,7 @@ namespace BudgetTracker.Scrapers
          {
              var driver = chrome.Driver;
              driver.Navigate().GoToUrl(@"https://www.tinkoff.ru/login/");
+             WaitForPageLoad(driver);
              var name = GetElement(driver, By.Name("login"));
              name.Click();
              chrome.SendKeys(configuration.Login);
