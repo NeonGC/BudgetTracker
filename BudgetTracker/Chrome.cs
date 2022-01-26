@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -70,7 +71,14 @@ namespace BudgetTracker
             
             var d = _driver;
             _driver = null;
-            d?.Close();
+            try
+            {
+                d?.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+
             d?.Dispose();
         }
 
@@ -120,6 +128,7 @@ namespace BudgetTracker
                 httpClient.PostAsync(url, content).GetAwaiter().GetResult();
             }
 
+            Thread.Sleep(30);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
             return driver;
         }
