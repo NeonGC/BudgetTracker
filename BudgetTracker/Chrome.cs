@@ -108,7 +108,7 @@ namespace BudgetTracker
             chromeOptions.SetLoggingPreference(LogType.Client, LogLevel.Warning);
 
             var driverService = ChromeDriverService.CreateDefaultService(path);
-            var driver = new ChromeDriver(driverService, chromeOptions);
+            var driver = new ChromeDriver(driverService, chromeOptions, TimeSpan.FromSeconds(300));
 
             var url = driverService.ServiceUrl + "session/" + driver.SessionId + "/chromium/send_command";
             using (var httpClient = new HttpClient())
@@ -129,6 +129,7 @@ namespace BudgetTracker
             }
 
             Thread.Sleep(30);
+            driver.Manage().Timeouts().PageLoad = System.TimeSpan.FromSeconds(30);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
             return driver;
         }
