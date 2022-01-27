@@ -85,7 +85,7 @@ namespace BudgetTracker
         private static WebDriver CreateDriver(string downloadDir)
         {
             var driver = new RemoteWebDriver(new Uri(Startup.ChromeDriverUrl), new ChromeOptions());
-            var url = driver.Url + "session/" + driver.SessionId + "/chromium/send_command";
+            var url = new Uri(new Uri(Startup.ChromeDriverUrl), "/session/" + driver.SessionId + "/chromium/send_command").AbsoluteUri;
             using (var httpClient = new HttpClient())
             {
                 var content = new StringContent(JsonConvert.SerializeObject(new Dictionary<string, object>
