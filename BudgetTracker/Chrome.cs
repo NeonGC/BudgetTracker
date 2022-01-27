@@ -17,17 +17,17 @@ namespace BudgetTracker
     public class Chrome : IDisposable
     {
         private readonly string _downloadDir;
-        private ChromeDriver _driver;
+        private WebDriver _driver;
 
         public Chrome()
         {
-            _downloadDir = Path.Combine(Path.GetTempPath(), "ChromeWebDriverDownloads-" + Guid.NewGuid().ToString("N").Substring(0, 8));
+            _downloadDir = Path.Combine(Startup.ChromeDownloads, "ChromeWebDriverDownloads-" + Guid.NewGuid().ToString("N").Substring(0, 8));
             Directory.CreateDirectory(_downloadDir);
         }
 
         public bool HasDriver => _driver != null;
 
-        public ChromeDriver Driver
+        public WebDriver Driver
         {
             get
             {
@@ -82,35 +82,10 @@ namespace BudgetTracker
             d?.Dispose();
         }
 
-        private static ChromeDriver CreateDriver(string downloadDir)
+        private static WebDriver CreateDriver(string downloadDir)
         {
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            var chromeOptions = new ChromeOptions
-            {
-                AcceptInsecureCertificates = true
-            };
-
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SHOW_CHROME")))
-            {
-                chromeOptions.AddArgument("--headless");
-            }
-
-            chromeOptions.AddArgument("--no-sandbox");
-            chromeOptions.AddArgument("no-sandbox");
-            chromeOptions.AddArgument("--window-size=1920,1080");
-            chromeOptions.AddArgument("--ignore-certificate-errors");
-            chromeOptions.AddArgument("--useragent=\"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0\"");
-    
-            chromeOptions.SetLoggingPreference(LogType.Browser, LogLevel.Warning);
-            chromeOptions.SetLoggingPreference(LogType.Driver, LogLevel.Warning);
-            chromeOptions.SetLoggingPreference(LogType.Server, LogLevel.Warning);
-            chromeOptions.SetLoggingPreference(LogType.Client, LogLevel.Warning);
-
-            var driverService = ChromeDriverService.CreateDefaultService(path);
-            var driver = new ChromeDriver(driverService, chromeOptions, TimeSpan.FromSeconds(300));
-
-            var url = driverService.ServiceUrl + "session/" + driver.SessionId + "/chromium/send_command";
+            var driver = new RemoteWebDriver(new Uri(Startup.ChromeDriverUrl), new ChromeOptions());
+            var url = driver.Url + "session/" + driver.SessionId + "/chromium/send_command";
             using (var httpClient = new HttpClient())
             {
                 var content = new StringContent(JsonConvert.SerializeObject(new Dictionary<string, object>

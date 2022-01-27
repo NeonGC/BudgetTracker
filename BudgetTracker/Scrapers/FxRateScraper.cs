@@ -42,7 +42,7 @@ namespace BudgetTracker.Scrapers
             return result;
         }
 
-        private MoneyStateModel ParseMoney(string account, ChromeDriver driver)
+        private MoneyStateModel ParseMoney(string account, WebDriver driver)
         {
             var rows = GetElements(driver, By.ClassName("grid4"));
             foreach (var r in rows)

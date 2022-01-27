@@ -38,7 +38,7 @@ namespace BudgetTracker.Scrapers
             return new List<PaymentModel>();
         }
 
-        protected void WaitForPageLoad(ChromeDriver driver, int times = 5)
+        protected void WaitForPageLoad(WebDriver driver, int times = 5)
         {
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
             wait.Until(wd => wd.ExecuteJavaScript<string>("return document.readyState") == "complete");
@@ -78,14 +78,14 @@ namespace BudgetTracker.Scrapers
         }
 
 
-        protected IWebElement GetElement(ChromeDriver driver, By currencySpan)
+        protected IWebElement GetElement(WebDriver driver, By currencySpan)
         {
             var wt = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             var amountWait = wt.Until(d => d.FindElement(currencySpan));
             return amountWait;
         }
 
-        protected ICollection<IWebElement> GetElements(ChromeDriver driver, By by)
+        protected ICollection<IWebElement> GetElements(WebDriver driver, By by)
         {
             ReadOnlyCollection<IWebElement> elements = null;
 

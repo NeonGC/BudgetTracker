@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /app/net
 
+cd /app/net
 ./BudgetTracker

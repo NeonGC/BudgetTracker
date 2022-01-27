@@ -50,11 +50,15 @@ namespace BudgetTracker
             IsProduction = Configuration["Properties:IsProduction"] == "true";
             CommmitHash = Configuration["Properties:CiCommitHash"];
             CommmitName = Configuration["Properties:CiCommitName"];
+            ChromeDriverUrl = Configuration["Properties:ChromeDriver"];
+            ChromeDownloads = Configuration["Properties:Downloads"];
         }
 
         public static string CommmitName { get; private set; }
         public static string CommmitHash { get; private set; }
         public static bool IsProduction { get; private set; }
+        public static string ChromeDownloads { get; private set; }
+        public static string ChromeDriverUrl { get; private set; }
         public static DateTime LaunchTime { get; } = DateTime.UtcNow;
         public static SettingsModel GlobalSettings { get; private set; }
 
