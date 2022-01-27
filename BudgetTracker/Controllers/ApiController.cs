@@ -116,7 +116,7 @@ namespace BudgetTracker.Controllers
                 var d = data.Replace("\n", " ").Replace("\r", " ").Split("/=/=", 6).Select(v=>v.Trim()).ToList();
                 var from = d[0]; // %anapp
                 var message = d[1]; // %antext
-                var whenDate = DateTime.UtcNow;
+                var whenDate = DateTime.Now;
                 var smsModel = new SmsModel(@from, message, whenDate);
 
                 lock (typeof(SmsModel))
