@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Mono.Unix;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -56,6 +58,11 @@ namespace BudgetTracker
         {
             Directory.Delete(_downloadDir,true);
             Directory.CreateDirectory(_downloadDir);
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                UnixFileSystemInfo.GetFileSystemEntry(_downloadDir).FileAccessPermissions = FileAccessPermissions.AllPermissions;
+            }
+            
         }
 
         public void Dispose()
