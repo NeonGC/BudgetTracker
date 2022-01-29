@@ -20,12 +20,27 @@ services:
     restart: unless-stopped
     environment:
       Properties__IsProduction: 'true' # true если необходимо сохранять изменения в базу. false для локального запуска/отладки.
+      Properties__ChromeDriver: 'http://chrome:4444' # строка подключения к контейнеру с Google Chrome
+      Properties__Downloads: '/data' # путь к папке с загрузками - должна быть общая папка с Chrome
       ConnectionStrings__LiteDb: '/data/budgettracker.db' # Строка подключения к LiteDb, если используется локальный файл базы
     volumes:
-      - /dev/shm:/dev/shm # Рекомендуется для использования скрэйпинга через Google Chrome
       - /root/bt:/data # Путь монтирования папки /data, если используется локальный файл базы
+    depends_on:
+     - chrome
     ports:
       - "80:80"
+    networks:
+      public: {}
+
+  chrome:
+    image: selenium/standalone-chrome:latest
+    restart: unless-stopped
+    hostname: chrome
+    volumes:
+      - /dev/shm:/dev/shm
+      - /root/bt:/data
+    ports:
+      - "4444:4444"
     networks:
       public: {}
 
