@@ -21,7 +21,7 @@ namespace BudgetTracker
 
         public Chrome()
         {
-            _downloadDir = Path.Combine(Startup.ChromeDownloads, "ChromeWebDriverDownloads-" + Guid.NewGuid().ToString("N").Substring(0, 8));
+            _downloadDir = Path.Combine(Startup.ChromeDownloads, "ChromeWebDriverDownload");
             Directory.CreateDirectory(_downloadDir);
         }
 
