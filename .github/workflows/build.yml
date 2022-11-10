@@ -10,15 +10,15 @@ jobs:
 
     - name: Pulling caches
       run: |
-        export BUILDER_CACHE=diverofdark/budgettracker-builder:master
-        export MASTER_CACHE=diverofdark/budgettracker:master
+        export BUILDER_CACHE=neongc/budgettracker-builder:master
+        export MASTER_CACHE=neongc/budgettracker:master
 
         docker pull $BUILDER_CACHE || true
         docker pull $MASTER_CACHE || true
 
     - name: Build the Builder image
       run: |
-        export BUILDER_CACHE=diverofdark/budgettracker-builder:master
+        export BUILDER_CACHE=neongc/budgettracker-builder:master
 
         docker build --cache-from $BUILDER_CACHE -t $BUILDER_CACHE . -f Dockerfile.builder
 
@@ -28,7 +28,7 @@ jobs:
         DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
-        export BUILDER_CACHE=diverofdark/budgettracker-builder:master
+        export BUILDER_CACHE=neongc/budgettracker-builder:master
 
         docker login --username="$DOCKER_LOGIN" --password="$DOCKER_PASSWORD"
         docker push $BUILDER_CACHE
@@ -37,9 +37,9 @@ jobs:
       env: 
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: | 
-        export MASTER_CACHE=diverofdark/budgettracker:master
+        export MASTER_CACHE=neongc/budgettracker:master
         export BRANCH_NAME=`echo $GITHUB_REF | sed "s/refs\/heads\///"`
-        export CACHE_IMAGE=diverofdark/budgettracker:`echo $BRANCH_NAME | tr '/' '_'  | tr '@' '_'`
+        export CACHE_IMAGE=neongc/budgettracker:`echo $BRANCH_NAME | tr '/' '_'  | tr '@' '_'`
 
         echo "BRANCH_NAME: $BRANCH_NAME"
         echo "GITHUB_SHA: $GITHUB_SHA"
@@ -53,7 +53,7 @@ jobs:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
         export BRANCH_NAME=`echo $GITHUB_REF | sed "s/refs\/heads\///"`
-        export CACHE_IMAGE=diverofdark/budgettracker:`echo $BRANCH_NAME | tr '/' '_'  | tr '@' '_'`
+        export CACHE_IMAGE=neongc/budgettracker:`echo $BRANCH_NAME | tr '/' '_'  | tr '@' '_'`
 
         docker login --username="$DOCKER_LOGIN" --password="$DOCKER_PASSWORD"
         docker push $CACHE_IMAGE
