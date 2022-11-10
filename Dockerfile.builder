@@ -4,7 +4,7 @@ RUN apt -y update && \
     apt -y install apt-utils lsb-release gnupg && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - &&  \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - &&  \
     apt -y update && \
     apt -y install nodejs && \
     rm -rf /var/lib/apt/lists/*

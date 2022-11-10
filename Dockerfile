@@ -1,4 +1,4 @@
-FROM diverofdark/budgettracker-builder:master as net-builder
+FROM neongc/budgettracker-builder:master as net-builder
 ARG IsProduction=false
 ARG CiCommitName=local
 ARG CiCommitHash=sha
@@ -17,8 +17,8 @@ WORKDIR /build/
 
 ENV CiCommitName=$CiCommitName
 RUN /root/.dotnet/tools/dotnet-sonarscanner begin \
-        /k:"DiverOfDark_BudgetTracker" \
-        /o:"diverofdark-github" \
+        /k:"NeonGC_BudgetTracker" \
+        /o:"neongc" \
         /d:sonar.host.url="https://sonarcloud.io" \
         /d:sonar.login=$SONAR_TOKEN \
         /d:sonar.branch.name=$CiCommitName /d:sonar.sources=/build/BudgetTracker.Client && \
